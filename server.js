@@ -1,12 +1,27 @@
-const http = require('http');
-const hostname = '127.0.0.1';
-const port = process.env.PORT || 80;
-const server = http.createServer((req, res) => {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/plain');
-    res.end(process.env.DATABASE_URL);
-  });
+require('dotenv').config();
+const mysql = require("mysql");
+const express = require('express');
+const home = require('./routes/home')
 
-  server.listen(port,  () => {
-    console.log(`Server running at http://${hostname}:${port}/`);
-  });
+const app = express();
+const port = process.env.PORT;
+
+const db = mysql.createConnection(process.env.CLEARDB_DATABASE_URL);
+db.connect((err) => {
+  if (err) {
+      throw err;
+  }
+  console.log('Connected to database');
+});
+global.db = db;
+
+app.set('port',port);
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
+
+
+app.get('/', home.index);
+
+app.listen(port,()=>{
+  console.log(`Server running on port: ${port}`);
+});
