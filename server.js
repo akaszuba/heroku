@@ -15,6 +15,7 @@ const port = process.env.PORT;
 
 const db = mysql.createPool(process.env.CLEARDB_DATABASE_URL);
 global.db = db;
+global.passport = passport;
 
 const sess = {
   secret: "tajny_klucz",
@@ -53,33 +54,14 @@ app.use(passport.session());
 
 
 
-//db.query("www",function(error,results))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 app.get('/', home.index);
 app.get('/login', login.index);
-//app.post('/login',login.login);
-app.post('/login',
-  passport.authenticate('local', { failureRedirect: '/login' }),
-  function (req, res) {
-    res.redirect('/');
-  });
-
+// app.post('/login',passport.authenticate('local', { failureRedirect: '/logowanie' }),
+//     function (req, res) {
+//       res.redirect('/');
+//   });
+app.post('/login',login.login);
+ 
 app.listen(port, () => {
   console.log(`Server running on port: ${port}`);
 });
