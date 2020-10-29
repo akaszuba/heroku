@@ -1,7 +1,8 @@
 const passport = require("passport");
-module.exports={
-    index: (req,res)=>{
+module.exports = {
+    index: (req, res) => {
         res.render('login.ejs', {
+
            message:req.flash('message')
         });
     },
@@ -10,4 +11,5 @@ module.exports={
             function(req, res) {
             res.redirect('/');
     }}
+
 }

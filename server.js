@@ -56,13 +56,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session(sess));
 app.use(passport.initialize());
 app.use(passport.session());
+<<<<<<< HEAD
 app.use(flash());
 
+=======
+>>>>>>> dd3592c42dff3bbed1a6c1dce0c6506b98aeeeb7
 
 
 
 app.get('/', home.index);
 app.get('/login', login.index);
+<<<<<<< HEAD
 //app.post('/login',login.login);
 app.post('/login',
   passport.authenticate('local', { failureRedirect: '/login' , failureFlash:true}),
@@ -70,6 +74,14 @@ app.post('/login',
     res.redirect('/');
   });
 
+=======
+// app.post('/login',passport.authenticate('local', { failureRedirect: '/logowanie' }),
+//     function (req, res) {
+//       res.redirect('/');
+//   });
+app.post('/login',login.login);
+ 
+>>>>>>> dd3592c42dff3bbed1a6c1dce0c6506b98aeeeb7
 app.listen(port, () => {
   console.log(`Server running on port: ${port}`);
 });
