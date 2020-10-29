@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const Strategy = require('passport-local').Strategy;
 const session = require('express-session');
+const flash = require('connect-flash');
 
 const users = require("./db/users");
 const home = require('./routes/home');
@@ -15,22 +16,27 @@ const port = process.env.PORT;
 
 const db = mysql.createPool(process.env.CLEARDB_DATABASE_URL);
 global.db = db;
+global.passport = passport;
 
 const sess = {
   secret: "tajny_klucz",
   resave: false,
   saveUninitialized: true,
+  
 };
 
 
-passport.use(new Strategy(
+passport.use(new Strategy({
+  session: true,
+  failureMessage: true
+},
   function (username, password, cb) {
     users.findByUsername(username)
       .then(user => {
         if (user) {
           cb(null, user);
         } else {
-          cb("Can't find user", null);
+          cb(null, null,{message:"Can't find user"});
         }
       });
   }));
@@ -50,23 +56,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session(sess));
 app.use(passport.initialize());
 app.use(passport.session());
-
-
-
-//db.query("www",function(error,results))
-
-
-
-
-
-
-
-
-
-
-
-
-
+app.use(flash());
 
 
 
@@ -75,7 +65,7 @@ app.get('/', home.index);
 app.get('/login', login.index);
 //app.post('/login',login.login);
 app.post('/login',
-  passport.authenticate('local', { failureRedirect: '/login' }),
+  passport.authenticate('local', { failureRedirect: '/login' , failureFlash:true}),
   function (req, res) {
     res.redirect('/');
   });

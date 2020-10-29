@@ -5,7 +5,8 @@ module.exports = {
 
        
             res.render('home.ejs', {
-                
+
+                user : req.user
 
            
         });
